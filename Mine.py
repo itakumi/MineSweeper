@@ -40,7 +40,10 @@ def WHBRead(root,master,WidthInput,HeightInput,BombInput,UserData):
     if width>50 or height>50:
         messagebox.showinfo('エラー', 'マス目が大きすぎます')
         return
-    if num_bomb>=(width*height):
+    if width<4 or height<4:
+        messagebox.showinfo('エラー', 'マス目が小さすぎます')
+        return
+    if num_bomb>=((width*height)-9):
         messagebox.showinfo('エラー', '地雷の数が多すぎます')
         return
     master.destroy()
