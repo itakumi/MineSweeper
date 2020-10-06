@@ -241,6 +241,8 @@ def main(width,height,num_bomb,UserData):
                     isplaying.set(False)
                     messagebox.showinfo('クリア！', 'ゲームクリア！')
                     point=int(((width*height)-mistake_num.get())/int(time.time()-start+1)*num_bomb)
+                    if point<0:
+                        point=0
                     messagebox.showinfo('リザルト', 'プレイ時間:'+str(int(time.time()-start))+'\nミス数:'+str(mistake_num.get())+'\nあなたの得点:'+str(point)+"点")
                     counter_stop=False
                     while True:
