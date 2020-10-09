@@ -29,6 +29,15 @@ class EnemyInformation:
     enemygame_frame=None
     quitflag=False
     playtime,mistake_num,point=None,None,None
+    def Initinfo(self):
+        self.bomblist=[]
+        self.frame_list=[]
+        self.remainbomb=None
+        self.mistake_num=None
+        self.enemygame_frame=None
+        self.quitflag=False
+        self.playtime,self.mistake_num,self.point=None,None,None
+
 enemyinfo=EnemyInformation()
 class ClientSendThread(threading.Thread):
     data=None
@@ -185,16 +194,28 @@ def setRule(root,master,WidthInput,HeightInput,BombInput,UserData):
     time.sleep(3)
     Newgame(root,width,height,num_bomb,UserData=UserData,isonline=True)
 
-def ConnectByHost(root,UserData):
+def ConnectByHost(root,UserData,isonline):
+    if isonline.get():
+        return
     ConnectionData[0] = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     ConnectionData[0].connect(("LAPTOP-KQ122Q8D", 50000))
     full_msg = b''
     fromHostMessage=pickle.dumps(UserData)
     ConnectionData[0].send(fromHostMessage)
-    msg = ConnectionData[0].recv(1024)
+    try:
+        msg = ConnectionData[0].recv(1024)
+    except ConnectionResetError:
+        messagebox.showinfo('エラー', 'ホストとメンバーは1名ずつです')
+        return
     full_msg = msg
     d = pickle.loads(full_msg)
     messagebox.showinfo('マッチング成功！(ホスト)', '相手の情報\n'+str(d))
+    full_msg = b''
+    fromHostMessage=pickle.dumps(True)
+    ConnectionData[0].send(fromHostMessage)
+    msg = ConnectionData[0].recv(1024)
+    full_msg = msg
+    d = pickle.loads(full_msg)
     master = Tk()
     master.title("ルール設定")
     master.protocol('WM_DELETE_WINDOW', (lambda: 'pass')())
@@ -239,17 +260,29 @@ def ConnectByHost(root,UserData):
     btnRead.grid(row=4, column=1, sticky=E)
     master.mainloop()
 
-def ConnectByMember(root,UserData):
+def ConnectByMember(root,UserData,isonline):
+    if isonline.get():
+        return
     ConnectionData[0] = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     ConnectionData[0].connect(("LAPTOP-KQ122Q8D", 50001))
     full_msg = b''
     fromMemberMessage=pickle.dumps(UserData)
     ConnectionData[0].send(fromMemberMessage)
-    msg = ConnectionData[0].recv(1024)
+    try:
+        msg = ConnectionData[0].recv(1024)
+    except ConnectionResetError:
+        messagebox.showinfo('エラー', 'ホストとメンバーは1名ずつです')
+        return
     full_msg = msg
     d = pickle.loads(full_msg)
     messagebox.showinfo('マッチング成功！(メンバー)', '相手の情報\n'+str(d))
     messagebox.showinfo('待機','ホストがルールを決めています')
+    full_msg = b''
+    fromHostMessage=pickle.dumps(True)
+    ConnectionData[0].send(fromHostMessage)
+    msg = ConnectionData[0].recv(1024)
+    full_msg = msg
+    d = pickle.loads(full_msg)
     msg = ConnectionData[0].recv(1024)
     full_msg = msg
     d = pickle.loads(full_msg)
@@ -314,8 +347,8 @@ def main(width,height,num_bomb,UserData,isonline=False):
     menu_DIFFICULTY.add_command(label = "カスタム", under = 3,command=partial(Customgame,root,UserData,isonline=isonlinevar,fromcommand=True))
     #menu_ROOT.add_command(label = "終了(X)", under = 3,command=lambda:root.destroy())
     menu_ROOT.add_cascade(label = '通信対戦', under = 4, menu = menu_Online)
-    menu_Online.add_command(label = "サーバーへ接続(ホスト)", under = 3,command=partial(ConnectByHost,root=root,UserData=UserData))
-    menu_Online.add_command(label = "サーバーへ接続(メンバー)", under = 3,command=partial(ConnectByMember,root=root,UserData=UserData))
+    menu_Online.add_command(label = "サーバーへ接続(ホスト)", under = 3,command=partial(ConnectByHost,root=root,UserData=UserData,isonline=isonlinevar))
+    menu_Online.add_command(label = "サーバーへ接続(メンバー)", under = 3,command=partial(ConnectByMember,root=root,UserData=UserData,isonline=isonlinevar))
 
     root_frame = Frame(root, relief = 'groove', borderwidth = 5, bg = 'LightGray')
     status_frame = Frame(root_frame, height = 50, relief = 'sunken', borderwidth = 3, bg = 'LightGray')
@@ -401,6 +434,7 @@ def main(width,height,num_bomb,UserData,isonline=False):
                 ConnectionData[2].start()
                 ConnectionData[1].join()
                 isonlinevar.set(False)
+                enemyinfo.Initinfo()
                 root.protocol('WM_DELETE_WINDOW', (lambda:root.destroy()))
             else:
                 root.after(100,self.ShowEnemysResult)
@@ -474,9 +508,6 @@ def main(width,height,num_bomb,UserData,isonline=False):
                                 ConnectionData[2].start()
                             return
                         else:
-                            if not self.isonlineenemy and isonlinevar.get():
-                                ConnectionData[2]=ClientSendThread(dict([('continue','giveup')]))
-                                ConnectionData[2].start()
                             if not self.isonlineenemy:
                                 for i in bomb_list:
                                     self.frame_list[i].configure(bg = 'red')
@@ -486,6 +517,18 @@ def main(width,height,num_bomb,UserData,isonline=False):
                             for i in self.frame_list:
                                 i.bind("<1>", stop)
                                 i.bind("<Button-3>", stop)
+                            if not self.isonlineenemy and isonlinevar.get():
+                                ConnectionData[2]=ClientSendThread(dict([('continue','giveup')]))
+                                ConnectionData[2].start()
+                            point=0
+                            if (not self.isonlineenemy) and isonlinevar.get():
+                                ConnectionData[2]=ClientSendThread(dict(result=True,playtime=int(time.time()-self.start),mistake_num=mistake_num.get(),point=point))
+                                ConnectionData[2].start()
+                            messagebox.showinfo('リザルト', "結果は...")
+                            self.result=dict(playtime=int(time.time()-self.start),mistake_num=mistake_num.get(),point=point)
+                            messagebox.showinfo('リザルト', 'あなたのリザルト\nプレイ時間:'+str(int(time.time()-self.start))+'\nミス数:'+str(mistake_num.get())+'\nあなたの得点:'+str(point)+"点")
+                            if not self.isonlineenemy and isonlinevar.get():
+                                root.after(100,self.ShowEnemysResult)
                             isplaying.set(False)
                             return
                     else:
@@ -511,10 +554,10 @@ def main(width,height,num_bomb,UserData,isonline=False):
                         if not self.isonlineenemy and isonlinevar.get():
                             ConnectionData[2]=ClientSendThread(dict([('clear',True)]))
                             ConnectionData[2].start()
-                        messagebox.showinfo('クリア！', 'ゲームクリア！')
-                        if not self.isonlineenemy and isonlinevar.get():
+                        if not self.isonlineenemy:
                             for i in bomb_list:
                                 self.frame_list[i].configure(bg = 'gold')
+                        messagebox.showinfo('クリア！', 'ゲームクリア！')
                         point=int(((width*height)-mistake_num.get())/int(time.time()-self.start+1)*num_bomb)
                         if point<0:
                             point=0
@@ -641,7 +684,7 @@ def main(width,height,num_bomb,UserData,isonline=False):
                     if search_bomb(list,num-(width-1))==0:
                         zero_expantion(list,num-(width-1),framelist)
                     else:
-                        if search_bomb(list,num-(width+1))!=9:
+                        if search_bomb(list,num-(width-1))!=9:
                             bomb_count_label = Label(framelist[num-(width-1)], text = search_bomb(list,num-(width-1)), bg = 'LightGray')
                             bomb_count_label.place(width = SizeOfSquares, height = SizeOfSquares)
             if framelist[num+1]['relief']=="raised":
