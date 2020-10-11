@@ -194,11 +194,15 @@ def setRule(root,master,WidthInput,HeightInput,BombInput,UserData):
     time.sleep(3)
     Newgame(root,width,height,num_bomb,UserData=UserData,isonline=True)
 
-def ConnectByHost(root,UserData,isonline):
+def ConnectByHost(root,UserData,isonline,room_num):
     if isonline.get():
         return
     ConnectionData[0] = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    ConnectionData[0].connect(("LAPTOP-KQ122Q8D", 50000))
+    try:
+        ConnectionData[0].connect(("LAPTOP-KQ122Q8D", 50000+(2*room_num)))
+    except ConnectionRefusedError:
+        messagebox.showinfo('エラー', 'サーバーを立ててください')
+        return
     full_msg = b''
     fromHostMessage=pickle.dumps(UserData)
     ConnectionData[0].send(fromHostMessage)
@@ -260,11 +264,16 @@ def ConnectByHost(root,UserData,isonline):
     btnRead.grid(row=4, column=1, sticky=E)
     master.mainloop()
 
-def ConnectByMember(root,UserData,isonline):
+def ConnectByMember(root,UserData,isonline,room_num):
     if isonline.get():
         return
     ConnectionData[0] = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    ConnectionData[0].connect(("LAPTOP-KQ122Q8D", 50001))
+    try:
+        ConnectionData[0].connect(("LAPTOP-KQ122Q8D", 50000+(2*room_num)+1))
+        print("アドレスは",ConnectionData[0].getsockname())
+    except ConnectionRefusedError:
+        messagebox.showinfo('エラー', 'サーバーを立ててください')
+        return
     full_msg = b''
     fromMemberMessage=pickle.dumps(UserData)
     ConnectionData[0].send(fromMemberMessage)
@@ -347,8 +356,11 @@ def main(width,height,num_bomb,UserData,isonline=False):
     menu_DIFFICULTY.add_command(label = "カスタム", under = 3,command=partial(Customgame,root,UserData,isonline=isonlinevar,fromcommand=True))
     #menu_ROOT.add_command(label = "終了(X)", under = 3,command=lambda:root.destroy())
     menu_ROOT.add_cascade(label = '通信対戦', under = 4, menu = menu_Online)
-    menu_Online.add_command(label = "サーバーへ接続(ホスト)", under = 3,command=partial(ConnectByHost,root=root,UserData=UserData,isonline=isonlinevar))
-    menu_Online.add_command(label = "サーバーへ接続(メンバー)", under = 3,command=partial(ConnectByMember,root=root,UserData=UserData,isonline=isonlinevar))
+    for i in range(10):
+        second_menu=Menu(menu_Online,tearoff=0)
+        menu_Online.add_cascade(label = 'Room'+str(i+1), under = 4,menu=second_menu)
+        second_menu.add_command(label = "サーバーへ接続(ホスト)", under = 3,command=partial(ConnectByHost,root=root,UserData=UserData,isonline=isonlinevar,room_num=i))
+        second_menu.add_command(label = "サーバーへ接続(メンバー)", under = 3,command=partial(ConnectByMember,root=root,UserData=UserData,isonline=isonlinevar,room_num=i))
 
     root_frame = Frame(root, relief = 'groove', borderwidth = 5, bg = 'LightGray')
     status_frame = Frame(root_frame, height = 50, relief = 'sunken', borderwidth = 3, bg = 'LightGray')
@@ -923,6 +935,8 @@ def UserRead(root,UserInput):
         iscreate=messagebox.askyesno('ユーザー作成', '新しいユーザーを作成します。よろしいですか？')
         if iscreate:
             UserData=dict(Name=UserName,Level=1,Exp=0)#,'Totalexp'=0)
+            with open(basedirname+'/PickleData/UserInfomation_'+UserData['Name']+'.pickle','wb') as f:
+                pickle.dump(UserData,f)
             root.destroy()
             main(9,9,10,UserData)
 
