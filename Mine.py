@@ -270,7 +270,6 @@ def ConnectByMember(root,UserData,isonline,room_num):
     ConnectionData[0] = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     try:
         ConnectionData[0].connect(("LAPTOP-KQ122Q8D", 50000+(2*room_num)+1))
-        print("アドレスは",ConnectionData[0].getsockname())
     except ConnectionRefusedError:
         messagebox.showinfo('エラー', 'サーバーを立ててください')
         return
@@ -367,7 +366,8 @@ def main(width,height,num_bomb,UserData,isonline=False):
 
     BombNumLabel=Label(status_frame,text=remainbomb.get(),font=15)
     BombNumLabel.pack(side=tk.LEFT,anchor=tk.W,expand=1)
-    NewGameButton=Button(status_frame,text="N",font=15,command=partial(Newgame,root,width=width,height=height,num_bomb=num_bomb,UserData=UserData,isonline=isonlinevar,fromcommand=True))
+    #NewGameButton=Button(status_frame,text="N",font=15,command=partial(Newgame,root,width=width,height=height,num_bomb=num_bomb,UserData=UserData,isonline=isonlinevar,fromcommand=True,WindowSize=str(root.winfo_width())+"x"+str(root.winfo_height())))
+    NewGameButton=Button(status_frame,text="N",font=15,command=lambda:Newgame(root,width=width,height=height,num_bomb=num_bomb,UserData=UserData,isonline=isonlinevar,fromcommand=True))
     NewGameButton.pack(side=tk.LEFT,anchor='center',expand=1)
     if isonlinevar.get():
         TimeLabel=Label(status_frame,text=0.0,font=15)
@@ -647,7 +647,15 @@ def main(width,height,num_bomb,UserData,isonline=False):
             size = (self.interior.winfo_reqwidth(), self.interior.winfo_reqheight())
             self.canvas.config(scrollregion='0 0 {0} {1}'.format(size[0],size[1]))
             if self.interior.winfo_reqwidth() != self.canvas.winfo_width():
-                self.canvas.config(width=self.interior.winfo_reqwidth())
+                if self.interior.winfo_reqwidth()+40<self.interior.winfo_screenwidth():
+                    self.canvas.config(width=self.interior.winfo_reqwidth())
+                else:
+                    self.canvas.config(width=self.interior.winfo_screenwidth()-40)
+            if self.interior.winfo_reqheight() != self.canvas.winfo_height():
+                if self.interior.winfo_reqheight()+120<self.interior.winfo_screenheight():
+                    self.canvas.config(height=self.interior.winfo_reqheight())
+                else:
+                    self.canvas.config(height=self.interior.winfo_screenheight()-200)
 
         def configure_canvas(self, event=None):
             if self.interior.winfo_reqwidth() != self.canvas.winfo_width():
