@@ -693,200 +693,218 @@ def main(width,height,num_bomb,UserData,isonline=False):
         if num % width == 0:
             if num>=width:
                 if framelist[num-width]['relief']=="raised":
-                    framelist[num-width].configure(relief = 'ridge', bd = '1')
-                    framelist[num-width].bind("<Button-1>",stop)
-                    framelist[num-width].bind("<Button-3>",stop)
+                    if framelist[num-width]['bg']!='Yellow':
+                        framelist[num-width].configure(relief = 'ridge', bd = '1')
+                        framelist[num-width].bind("<Button-1>",stop)
+                        framelist[num-width].bind("<Button-3>",stop)
                     if search_bomb(list,num-width)==0:
                         zero_expantion(list,num-width,framelist)
                     else:
-                        if search_bomb(list,num-width)!=9:
+                        if search_bomb(list,num-width)!=9 and framelist[num-width]['bg']!='Yellow':
                             bomb_count_label = Label(framelist[num-width], text = search_bomb(list,num-width), bg = 'LightGray')
                             bomb_count_label.place(width = SizeOfSquares, height = SizeOfSquares)
             if num>=width:
                 if framelist[num-(width-1)]['relief']=="raised":
-                    framelist[num-(width-1)].configure(relief = 'ridge', bd = '1')
-                    framelist[num-(width-1)].bind("<Button-1>",stop)
-                    framelist[num-(width-1)].bind("<Button-3>",stop)
+                    if framelist[num-(width-1)]['bg']!='Yellow':
+                        framelist[num-(width-1)].configure(relief = 'ridge', bd = '1')
+                        framelist[num-(width-1)].bind("<Button-1>",stop)
+                        framelist[num-(width-1)].bind("<Button-3>",stop)
                     if search_bomb(list,num-(width-1))==0:
                         zero_expantion(list,num-(width-1),framelist)
                     else:
-                        if search_bomb(list,num-(width-1))!=9:
+                        if search_bomb(list,num-(width-1))!=9 and framelist[num-(width-1)]['bg']!='Yellow':
                             bomb_count_label = Label(framelist[num-(width-1)], text = search_bomb(list,num-(width-1)), bg = 'LightGray')
                             bomb_count_label.place(width = SizeOfSquares, height = SizeOfSquares)
             if framelist[num+1]['relief']=="raised":
-                framelist[num+1].configure(relief = 'ridge', bd = '1')
-                framelist[num+1].bind("<Button-1>",stop)
-                framelist[num+1].bind("<Button-3>",stop)
+                if framelist[num+1]['bg']!='Yellow':
+                    framelist[num+1].configure(relief = 'ridge', bd = '1')
+                    framelist[num+1].bind("<Button-1>",stop)
+                    framelist[num+1].bind("<Button-3>",stop)
                 if search_bomb(list,num+1)==0:
                     zero_expantion(list,num+1,framelist)
                 else:
-                    if search_bomb(list,num+1)!=9:
+                    if search_bomb(list,num+1)!=9 and framelist[num+1]['bg']!='Yellow':
                         bomb_count_label = Label(framelist[num+1], text = search_bomb(list,num+1), bg = 'LightGray')
                         bomb_count_label.place(width = SizeOfSquares, height = SizeOfSquares)
             if num<=((width*height)-(2*width)):
                 if framelist[num+width]['relief']=="raised":
-                    framelist[num+width].configure(relief = 'ridge', bd = '1')
-                    framelist[num+width].bind("<Button-1>",stop)
-                    framelist[num+width].bind("<Button-3>",stop)
+                    if framelist[num+width]['bg']!='Yellow':
+                        framelist[num+width].configure(relief = 'ridge', bd = '1')
+                        framelist[num+width].bind("<Button-1>",stop)
+                        framelist[num+width].bind("<Button-3>",stop)
                     if search_bomb(list,num+width)==0:
                         zero_expantion(list,num+width,framelist)
                     else:
-                        if search_bomb(list,num+width)!=9:
+                        if search_bomb(list,num+width)!=9 and framelist[num+width]['bg']!='Yellow':
                             bomb_count_label = Label(framelist[num+width], text = search_bomb(list,num+width), bg = 'LightGray')
                             bomb_count_label.place(width = SizeOfSquares, height = SizeOfSquares)
             if num<=((width*height)-(2*width)):
                 if framelist[num+(width+1)]['relief']=="raised":
-                    framelist[num+(width+1)].configure(relief = 'ridge', bd = '1')
-                    framelist[num+(width+1)].bind("<Button-1>",stop)
-                    framelist[num+(width+1)].bind("<Button-3>",stop)
+                    if framelist[num+(width+1)]['bg']!='Yellow':
+                        framelist[num+(width+1)].configure(relief = 'ridge', bd = '1')
+                        framelist[num+(width+1)].bind("<Button-1>",stop)
+                        framelist[num+(width+1)].bind("<Button-3>",stop)
                     if search_bomb(list,num+(width+1))==0:
                         zero_expantion(list,num+(width+1),framelist)
                     else:
-                        if search_bomb(list,num-(width+1))!=9:
+                        if search_bomb(list,num-(width+1))!=9 and framelist[num+(width+1)]['bg']!='Yellow':
                             bomb_count_label = Label(framelist[num+(width+1)], text = search_bomb(list,num+(width+1)), bg = 'LightGray')
                             bomb_count_label.place(width = SizeOfSquares, height = SizeOfSquares)
         elif (num % width) == (width-1):
             if num>=((2*width)-1):
                 if framelist[num-(width+1)]['relief']=="raised":
-                    framelist[num-(width+1)].configure(relief = 'ridge', bd = '1')
-                    framelist[num-(width+1)].bind("<Button-1>",stop)
-                    framelist[num-(width+1)].bind("<Button-3>",stop)
+                    if framelist[num-(width+1)]['bg']!='Yellow':
+                        framelist[num-(width+1)].configure(relief = 'ridge', bd = '1')
+                        framelist[num-(width+1)].bind("<Button-1>",stop)
+                        framelist[num-(width+1)].bind("<Button-3>",stop)
                     if search_bomb(list,num-(width+1))==0:
                         zero_expantion(list,num-(width+1),framelist)
                     else:
-                        if search_bomb(list,num-(width+1))!=9:
+                        if search_bomb(list,num-(width+1))!=9 and framelist[num-(width+1)]['bg']!='Yellow':
                             bomb_count_label = Label(framelist[num-(width+1)], text = search_bomb(list,num-(width+1)), bg = 'LightGray')
                             bomb_count_label.place(width = SizeOfSquares, height = SizeOfSquares)
             if num>=((2*width)-1):
                 if framelist[num-width]['relief']=="raised":
-                    framelist[num-width].configure(relief = 'ridge', bd = '1')
-                    framelist[num-width].bind("<Button-1>",stop)
-                    framelist[num-width].bind("<Button-3>",stop)
+                    if framelist[num-width]['bg']!='Yellow':
+                        framelist[num-width].configure(relief = 'ridge', bd = '1')
+                        framelist[num-width].bind("<Button-1>",stop)
+                        framelist[num-width].bind("<Button-3>",stop)
                     if search_bomb(list,num-width)==0:
                         zero_expantion(list,num-width,framelist)
                     else:
-                        if search_bomb(list,num-width)!=9:
+                        if search_bomb(list,num-width)!=9 and framelist[num-width]['bg']!='Yellow':
                             bomb_count_label = Label(framelist[num-width], text = search_bomb(list,num-width), bg = 'LightGray')
                             bomb_count_label.place(width = SizeOfSquares, height = SizeOfSquares)
             if framelist[num-1]['relief']=="raised":
-                framelist[num-1].configure(relief = 'ridge', bd = '1')
-                framelist[num-1].bind("<Button-1>",stop)
-                framelist[num-1].bind("<Button-3>",stop)
+                if framelist[num-1]['bg']!='Yellow':
+                    framelist[num-1].configure(relief = 'ridge', bd = '1')
+                    framelist[num-1].bind("<Button-1>",stop)
+                    framelist[num-1].bind("<Button-3>",stop)
                 if search_bomb(list,num-1)==0:
                     zero_expantion(list,num-1,framelist)
                 else:
-                    if search_bomb(list,num-1)!=9:
+                    if search_bomb(list,num-1)!=9 and framelist[num-1]['bg']!='Yellow':
                         bomb_count_label = Label(framelist[num-1], text = search_bomb(list,num-1), bg = 'LightGray')
                         bomb_count_label.place(width = SizeOfSquares, height = SizeOfSquares)
             if num<=((width*height)-width-1):
                 if framelist[num+(width-1)]['relief']=="raised":
-                    framelist[num+(width-1)].configure(relief = 'ridge', bd = '1')
-                    framelist[num+(width-1)].bind("<Button-1>",stop)
-                    framelist[num+(width-1)].bind("<Button-3>",stop)
+                    if framelist[num+(width-1)]['bg']!='Yellow':
+                        framelist[num+(width-1)].configure(relief = 'ridge', bd = '1')
+                        framelist[num+(width-1)].bind("<Button-1>",stop)
+                        framelist[num+(width-1)].bind("<Button-3>",stop)
                     if search_bomb(list,num+(width-1))==0:
                         zero_expantion(list,num+(width-1),framelist)
                     else:
-                        if search_bomb(list,num+(width-1))!=9:
+                        if search_bomb(list,num+(width-1))!=9 and framelist[num+(width-1)]['bg']!='Yellow':
                             bomb_count_label = Label(framelist[num+(width-1)], text = search_bomb(list,num+(width-1)), bg = 'LightGray')
                             bomb_count_label.place(width = SizeOfSquares, height = SizeOfSquares)
             if num<=((width*height)-width-1):
                 if framelist[num+width]['relief']=="raised":
-                    framelist[num+width].configure(relief = 'ridge', bd = '1')
-                    framelist[num+width].bind("<Button-1>",stop)
-                    framelist[num+width].bind("<Button-3>",stop)
+                    if framelist[num+width]['bg']!='Yellow':
+                        framelist[num+width].configure(relief = 'ridge', bd = '1')
+                        framelist[num+width].bind("<Button-1>",stop)
+                        framelist[num+width].bind("<Button-3>",stop)
                     if search_bomb(list,num+width)==0:
                         zero_expantion(list,num+width,framelist)
                     else:
-                        if search_bomb(list,num+width)!=9:
+                        if search_bomb(list,num+width)!=9 and framelist[num+width]['bg']!='Yellow':
                             bomb_count_label = Label(framelist[num+width], text = search_bomb(list,num+width), bg = 'LightGray')
                             bomb_count_label.place(width = SizeOfSquares, height = SizeOfSquares)
         else:
             if num>=(width+1):
                 if framelist[num-(width+1)]['relief']=="raised":
-                    framelist[num-(width+1)].configure(relief = 'ridge', bd = '1')
-                    framelist[num-(width+1)].bind("<Button-1>",stop)
-                    framelist[num-(width+1)].bind("<Button-3>",stop)
+                    if framelist[num-(width+1)]['bg']!='Yellow':
+                        framelist[num-(width+1)].configure(relief = 'ridge', bd = '1')
+                        framelist[num-(width+1)].bind("<Button-1>",stop)
+                        framelist[num-(width+1)].bind("<Button-3>",stop)
                     if search_bomb(list,num-(width+1))==0:
                         zero_expantion(list,num-(width+1),framelist)
                     else:
-                        if search_bomb(list,num-(width+1))!=9:
+                        if search_bomb(list,num-(width+1))!=9 and framelist[num-(width+1)]['bg']!='Yellow':
                             bomb_count_label = Label(framelist[num-(width+1)], text = search_bomb(list,num-(width+1)), bg = 'LightGray')
                             bomb_count_label.place(width = SizeOfSquares, height = SizeOfSquares)
             if num>=(width+1):
                 if framelist[num-width]['relief']=="raised":
-                    framelist[num-width].configure(relief = 'ridge', bd = '1')
-                    framelist[num-width].bind("<Button-1>",stop)
-                    framelist[num-width].bind("<Button-3>",stop)
+                    if framelist[num-width]['bg']!='Yellow':
+                        framelist[num-width].configure(relief = 'ridge', bd = '1')
+                        framelist[num-width].bind("<Button-1>",stop)
+                        framelist[num-width].bind("<Button-3>",stop)
                     if search_bomb(list,num-width)==0:
                         zero_expantion(list,num-width,framelist)
                     else:
-                        if search_bomb(list,num-width)!=9:
+                        if search_bomb(list,num-width)!=9 and framelist[num-width]['bg']!='Yellow':
                             bomb_count_label = Label(framelist[num-width], text = search_bomb(list,num-width), bg = 'LightGray')
                             bomb_count_label.place(width = SizeOfSquares, height = SizeOfSquares)
             if num>=(width+1):
                 if framelist[num-(width-1)]['relief']=="raised":
-                    framelist[num-(width-1)].configure(relief = 'ridge', bd = '1')
-                    framelist[num-(width-1)].bind("<Button-1>",stop)
-                    framelist[num-(width-1)].bind("<Button-3>",stop)
+                    if framelist[num-(width-1)]['bg']!='Yellow':
+                        framelist[num-(width-1)].configure(relief = 'ridge', bd = '1')
+                        framelist[num-(width-1)].bind("<Button-1>",stop)
+                        framelist[num-(width-1)].bind("<Button-3>",stop)
                     if search_bomb(list,num-(width-1))==0:
                         zero_expantion(list,num-(width-1),framelist)
                     else:
-                        if search_bomb(list,num-(width-1))!=9:
+                        if search_bomb(list,num-(width-1))!=9 and framelist[num-(width-1)]['bg']!='Yellow':
                             bomb_count_label = Label(framelist[num-(width-1)], text = search_bomb(list,num-(width-1)), bg = 'LightGray')
                             bomb_count_label.place(width = SizeOfSquares, height = SizeOfSquares)
             if num>=1:
                 if framelist[num-1]['relief']=="raised":
-                    framelist[num-1].configure(relief = 'ridge', bd = '1')
-                    framelist[num-1].bind("<Button-1>",stop)
-                    framelist[num-1].bind("<Button-3>",stop)
+                    if framelist[num-1]['bg']!='Yellow':
+                        framelist[num-1].configure(relief = 'ridge', bd = '1')
+                        framelist[num-1].bind("<Button-1>",stop)
+                        framelist[num-1].bind("<Button-3>",stop)
                     if search_bomb(list,num-1)==0:
                         zero_expantion(list,num-1,framelist)
                     else:
-                        if search_bomb(list,num-1)!=9:
+                        if search_bomb(list,num-1)!=9 and framelist[num-1]['bg']!='Yellow':
                             bomb_count_label = Label(framelist[num-1], text = search_bomb(list,num-1), bg = 'LightGray')
                             bomb_count_label.place(width = SizeOfSquares, height = SizeOfSquares)
             if num<=((width*height)-2):
                 if framelist[num+1]['relief']=="raised":
-                    framelist[num+1].configure(relief = 'ridge', bd = '1')
-                    framelist[num+1].bind("<Button-1>",stop)
-                    framelist[num+1].bind("<Button-3>",stop)
+                    if framelist[num+1]['bg']!='Yellow':
+                        framelist[num+1].configure(relief = 'ridge', bd = '1')
+                        framelist[num+1].bind("<Button-1>",stop)
+                        framelist[num+1].bind("<Button-3>",stop)
                     if search_bomb(list,num+1)==0:
                         zero_expantion(list,num+1,framelist)
                     else:
-                        if search_bomb(list,num+1)!=9:
+                        if search_bomb(list,num+1)!=9 and framelist[num+1]['bg']!='Yellow':
                             bomb_count_label = Label(framelist[num+1], text = search_bomb(list,num+1), bg = 'LightGray')
                             bomb_count_label.place(width = SizeOfSquares, height = SizeOfSquares)
             if num<=((width*height)-width-2):
                 if framelist[num+(width-1)]['relief']=="raised":
-                    framelist[num+(width-1)].configure(relief = 'ridge', bd = '1')
-                    framelist[num+(width-1)].bind("<Button-1>",stop)
-                    framelist[num+(width-1)].bind("<Button-3>",stop)
+                    if framelist[num+(width-1)]['bg']!='Yellow':
+                        framelist[num+(width-1)].configure(relief = 'ridge', bd = '1')
+                        framelist[num+(width-1)].bind("<Button-1>",stop)
+                        framelist[num+(width-1)].bind("<Button-3>",stop)
                     if search_bomb(list,num+(width-1))==0:
                         zero_expantion(list,num+(width-1),framelist)
                     else:
-                        if search_bomb(list,num+(width-1))!=9:
+                        if search_bomb(list,num+(width-1))!=9 and framelist[num+(width-1)]['bg']!='Yellow':
                             bomb_count_label = Label(framelist[num+(width-1)], text = search_bomb(list,num+(width-1)), bg = 'LightGray')
                             bomb_count_label.place(width = SizeOfSquares, height = SizeOfSquares)
             if num<=((width*height)-width-2):
                 if framelist[num+width]['relief']=="raised":
-                    framelist[num+width].configure(relief = 'ridge', bd = '1')
-                    framelist[num+width].bind("<Button-1>",stop)
-                    framelist[num+width].bind("<Button-3>",stop)
+                    if framelist[num+width]['bg']!='Yellow':
+                        framelist[num+width].configure(relief = 'ridge', bd = '1')
+                        framelist[num+width].bind("<Button-1>",stop)
+                        framelist[num+width].bind("<Button-3>",stop)
                     if search_bomb(list,num+width)==0:
                         zero_expantion(list,num+width,framelist)
                     else:
-                        if search_bomb(list,num+width)!=9:
+                        if search_bomb(list,num+width)!=9 and framelist[num+width]['bg']!='Yellow':
                             bomb_count_label = Label(framelist[num+width], text = search_bomb(list,num+width), bg = 'LightGray')
                             bomb_count_label.place(width = SizeOfSquares, height = SizeOfSquares)
             if num<=((width*height)-width-2):
                 if framelist[num+(width+1)]['relief']=="raised":
-                    framelist[num+(width+1)].configure(relief = 'ridge', bd = '1')
-                    framelist[num+(width+1)].bind("<Button-1>",stop)
-                    framelist[num+(width+1)].bind("<Button-3>",stop)
+                    if framelist[num+(width+1)]['bg']!='Yellow':
+                        framelist[num+(width+1)].configure(relief = 'ridge', bd = '1')
+                        framelist[num+(width+1)].bind("<Button-1>",stop)
+                        framelist[num+(width+1)].bind("<Button-3>",stop)
                     if search_bomb(list,num+(width+1))==0:
                         zero_expantion(list,num+(width+1),framelist)
                     else:
-                        if search_bomb(list,num+(width+1))!=9:
+                        if search_bomb(list,num+(width+1))!=9 and framelist[num+(width+1)]['bg']!='Yellow':
                             bomb_count_label = Label(framelist[num+(width+1)], text = search_bomb(list,num+(width+1)), bg = 'LightGray')
                             bomb_count_label.place(width = SizeOfSquares, height = SizeOfSquares)
 
