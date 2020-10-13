@@ -76,6 +76,8 @@ class ClientReceiveThread(threading.Thread):
                 enemyinfo.quitflag=True
             elif 'result' in d:
                 enemyinfo.playtime,enemyinfo.mistake_num,enemyinfo.point=d['playtime'],d['mistake_num'],d['point']
+            elif 'flagevent' in d:
+                enemyinfo.enemygame_frame.right_click(d['flagevent'],enemyinfo.remainbomb)
 def Newgame(root,width,height,num_bomb,UserData,isonline=False,fromcommand=False):
     if not isinstance(isonline,bool):
         isonline=isonline.get()
@@ -532,6 +534,7 @@ def main(width,height,num_bomb,UserData,isonline=False):
                             if not self.isonlineenemy and isonlinevar.get():
                                 ConnectionData[2]=ClientSendThread(dict([('continue','giveup')]))
                                 ConnectionData[2].start()
+                            isplaying.set(False)
                             point=0
                             if (not self.isonlineenemy) and isonlinevar.get():
                                 ConnectionData[2]=ClientSendThread(dict(result=True,playtime=int(time.time()-self.start),mistake_num=mistake_num.get(),point=point))
@@ -541,7 +544,6 @@ def main(width,height,num_bomb,UserData,isonline=False):
                             messagebox.showinfo('リザルト', 'あなたのリザルト\nプレイ時間:'+str(int(time.time()-self.start))+'\nミス数:'+str(mistake_num.get())+'\nあなたの得点:'+str(point)+"点")
                             if not self.isonlineenemy and isonlinevar.get():
                                 root.after(100,self.ShowEnemysResult)
-                            isplaying.set(False)
                             return
                     else:
                         enemyinfo.mistake_num.set(enemyinfo.mistake_num.get()+1)
@@ -627,16 +629,20 @@ def main(width,height,num_bomb,UserData,isonline=False):
                     num=event
             else:
                 num=event
-            if self.frame_list[event.widget.num]['bg']=="LightGray":
-                self.frame_list[event.widget.num]['bg']="Yellow"
+            if isonlinevar.get():
+                if not self.isonlineenemy:
+                    ConnectionData[2]=ClientSendThread(dict(flagevent=num,isonlineenemy=self.isonlineenemy))
+                    ConnectionData[2].start()
+            if self.frame_list[num]['bg']=="LightGray":
+                self.frame_list[num]['bg']="Yellow"
                 if not self.isonlineenemy:
                     remainbomb.set(remainbomb.get()-1)
                     BombNumLabel.configure(text=remainbomb.get())
                 else:
                     enemyinfo.remainbomb.set(enemyinfo.remainbomb.get()-1)
-                    BombNumLabel.configure(text=enemyinfo.remainbomb.get())
+                    #BombNumLabel.configure(text=enemyinfo.remainbomb.get())
             else:
-                self.frame_list[event.widget.num]['bg']="LightGray"
+                self.frame_list[num]['bg']="LightGray"
                 if not self.isonlineenemy:
                     remainbomb.set(remainbomb.get()+1)
                     BombNumLabel.configure(text=remainbomb.get())
