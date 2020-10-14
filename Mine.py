@@ -78,7 +78,7 @@ class ClientReceiveThread(threading.Thread):
                 enemyinfo.playtime,enemyinfo.mistake_num,enemyinfo.point=d['playtime'],d['mistake_num'],d['point']
             elif 'flagevent' in d:
                 enemyinfo.enemygame_frame.right_click(d['flagevent'],enemyinfo.remainbomb)
-def Newgame(root,width,height,num_bomb,UserData,isonline=False,fromcommand=False):
+def Newgame(root,event=None,width=None,height=None,num_bomb=None,UserData=None,isonline=False,fromcommand=False):
     if not isinstance(isonline,bool):
         isonline=isonline.get()
     if fromcommand and isonline==True:
@@ -368,9 +368,9 @@ def main(width,height,num_bomb,UserData,isonline=False):
 
     BombNumLabel=Label(status_frame,text=remainbomb.get(),font=15)
     BombNumLabel.pack(side=tk.LEFT,anchor=tk.W,expand=1)
-    #NewGameButton=Button(status_frame,text="N",font=15,command=partial(Newgame,root,width=width,height=height,num_bomb=num_bomb,UserData=UserData,isonline=isonlinevar,fromcommand=True,WindowSize=str(root.winfo_width())+"x"+str(root.winfo_height())))
     NewGameButton=Button(status_frame,text="N",font=15,command=lambda:Newgame(root,width=width,height=height,num_bomb=num_bomb,UserData=UserData,isonline=isonlinevar,fromcommand=True))
     NewGameButton.pack(side=tk.LEFT,anchor='center',expand=1)
+    root.bind("<Control-n>",partial(Newgame,root,width=width,height=height,num_bomb=num_bomb,UserData=UserData,isonline=isonlinevar,fromcommand=True))
     if isonlinevar.get():
         TimeLabel=Label(status_frame,text=0.0,font=15)
         TimeLabel.pack(side=tk.LEFT,anchor=tk.E,expand=1)
@@ -954,7 +954,9 @@ def main(width,height,num_bomb,UserData,isonline=False):
         pass
     start = time.time()
     root.mainloop()
-def UserRead(root,UserInput):
+def UserRead(event=None,root=None,UserInput=None):
+    if root==None or UserInput==None:
+        return
     UserName=UserInput.get()
     if not os.path.isdir(basedirname+'/PickleData'):
         os.mkdir(basedirname+'/PickleData')
@@ -986,4 +988,5 @@ if __name__ == "__main__":
     UserReadbtn=tk.Button(Usertk, height=1, width=10, text="OK",
                         command=partial(UserRead,root=Usertk,UserInput=UserInput))
     UserReadbtn.grid(row=4, column=1, sticky=E)
+    Usertk.bind("<Return>",partial(UserRead,root=Usertk,UserInput=UserInput))
     Usertk.mainloop()
