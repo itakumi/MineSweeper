@@ -85,7 +85,7 @@ def Newgame(root,event=None,width=None,height=None,num_bomb=None,UserData=None,i
         return
     root.destroy()
     main(width,height,num_bomb,UserData,isonline)
-def WHBRead(root,master,WidthInput,HeightInput,BombInput,UserData):
+def WHBRead(event=None,root=None,master=None,WidthInput=None,HeightInput=None,BombInput=None,UserData=None):
     try:
         width=int(WidthInput.get())
         height=int(HeightInput.get())
@@ -112,12 +112,12 @@ def WHBRead(root,master,WidthInput,HeightInput,BombInput,UserData):
     root.destroy()
     main(width,height,num_bomb,UserData)
 
-def Customgame(root,UserData,isonline=False,fromcommand=False):
+def Customgame(event=None,root=None,UserData=None,isonline=False,fromcommand=False):
     if not isinstance(isonline,bool):
         isonline=isonline.get()
     if fromcommand and isonline==True:
         return
-    master = Tk()
+    master = tk.Tk()
     master.title("幅、高さ、地雷の数を入力")
 
     Widthframe = ttk.Frame(master, padding=10)
@@ -145,13 +145,13 @@ def Customgame(root,UserData,isonline=False,fromcommand=False):
     BombInput.pack(side=LEFT)
     btnRead=tk.Button(master, height=1, width=10, text="OK",
                         command=partial(WHBRead,root=root,master=master,WidthInput=WidthInput,HeightInput=HeightInput,BombInput=BombInput,UserData=UserData))
-
     btnRead.grid(row=4, column=1, sticky=E)
+    master.bind("<Return>",partial(WHBRead,root=root,master=master,WidthInput=WidthInput,HeightInput=HeightInput,BombInput=BombInput,UserData=UserData))
     master.mainloop()
 def SetSizeOfSquares(size,menu,sizebar):
     global SizeOfSquares
     sizebar.set(size)
-    menu.entryconfigure(3,label = "マス目の大きさ("+str(sizebar.get())+")")
+    menu.entryconfigure(3,label = "マス目の大きさ(S)("+str(sizebar.get())+")")
     SizeOfSquares=size
 def setRule(root,master,WidthInput,HeightInput,BombInput,UserData):
     if isinstance(WidthInput,int):
@@ -313,7 +313,7 @@ def main(width,height,num_bomb,UserData,isonline=False):
         def __init__(self, master, bg=None,width=width,height=height):
             super().__init__(master, bg=bg, width=width, height=height)
     start=time.time()
-    root=tk.Tk()
+    root=Tk()
     isplaying=BooleanVar(root,value=True)
     isonlinevar=BooleanVar(root,value=isonline)
     mistake_num=IntVar(root,value=0)
@@ -339,10 +339,10 @@ def main(width,height,num_bomb,UserData,isonline=False):
     menu_DIFFICULTY = Menu(menu_ROOT, tearoff = False)
     menu_Online = Menu(menu_ROOT, tearoff = False)
 
-    menu_ROOT.add_cascade(label = 'ゲーム', under = 4, menu = menu_GAME)
-    menu_ROOT.add_cascade(label = '難易度選択', under = 4, menu = menu_DIFFICULTY)
+    menu_ROOT.add_cascade(label = 'ゲーム(G)', under = 4, menu = menu_GAME,underline=4)
+    menu_ROOT.add_cascade(label = '難易度選択(D)', under = 4, menu = menu_DIFFICULTY,underline=6)
     sizebar=IntVar(value=SizeOfSquares)
-    menu_ROOT.add_cascade(label = "マス目の大きさ("+str(sizebar.get())+")", under = 3, menu = menu_SizeOfSquares)
+    menu_ROOT.add_cascade(label = "マス目の大きさ(S)("+str(sizebar.get())+")", under = 3, menu = menu_SizeOfSquares,underline=8)
     menu_SizeOfSquares.add_radiobutton(label = "極小", under = 3,command=partial(SetSizeOfSquares,14,menu=menu_ROOT,sizebar=sizebar),variable=sizebar,value=14)
     menu_SizeOfSquares.add_radiobutton(label = "小", under = 3,command=partial(SetSizeOfSquares,20,menu=menu_ROOT,sizebar=sizebar),variable=sizebar,value=20)
     menu_SizeOfSquares.add_radiobutton(label = "中", under = 3,command=partial(SetSizeOfSquares,24,menu=menu_ROOT,sizebar=sizebar),variable=sizebar,value=24)
@@ -354,9 +354,17 @@ def main(width,height,num_bomb,UserData,isonline=False):
     menu_DIFFICULTY.add_command(label = "中級(16*16(地雷数=40))", under = 3,command=partial(Newgame,root,width=16,height=16,num_bomb=40,UserData=UserData,isonline=isonlinevar,fromcommand=True))
     menu_DIFFICULTY.add_command(label = "上級(30*16(地雷数=99))", under = 3,command=partial(Newgame,root,width=30,height=16,num_bomb=99,UserData=UserData,isonline=isonlinevar,fromcommand=True))
     menu_DIFFICULTY.add_command(label = "超上級(32*32(地雷数=199))", under = 3,command=partial(Newgame,root,width=32,height=32,num_bomb=199,UserData=UserData,isonline=isonlinevar,fromcommand=True))
-    menu_DIFFICULTY.add_command(label = "カスタム", under = 3,command=partial(Customgame,root,UserData,isonline=isonlinevar,fromcommand=True))
+    menu_DIFFICULTY.add_command(label = "カスタム", under = 3,command=partial(Customgame,root=root,UserData=UserData,isonline=isonlinevar,fromcommand=True))
+    root.bind("<Control-KeyPress-1>",partial(Newgame,root,width=9,height=9,num_bomb=10,UserData=UserData,isonline=isonlinevar,fromcommand=True))
+    root.bind("<Control-KeyPress-2>",partial(Newgame,root,width=16,height=16,num_bomb=40,UserData=UserData,isonline=isonlinevar,fromcommand=True))
+    root.bind("<Control-KeyPress-3>",partial(Newgame,root,width=30,height=16,num_bomb=99,UserData=UserData,isonline=isonlinevar,fromcommand=True))
+    root.bind("<Control-KeyPress-4>",partial(Newgame,root,width=32,height=32,num_bomb=199,UserData=UserData,isonline=isonlinevar,fromcommand=True))
+    root.bind("<Control-KeyPress-5>",partial(Customgame,root=root,UserData=UserData,isonline=isonlinevar,fromcommand=True))
     #menu_ROOT.add_command(label = "終了(X)", under = 3,command=lambda:root.destroy())
-    menu_ROOT.add_cascade(label = '通信対戦', under = 4, menu = menu_Online)
+    menu_ROOT.add_cascade(label = '通信対戦(B)', under = 4, menu = menu_Online,underline=5)
+    # root.withdraw()
+    # root.after(5000,lambda:root.deiconify())
+    #root.attributes("-topmost", True) #最前面表示
     for i in range(10):
         second_menu=Menu(menu_Online,tearoff=0)
         menu_Online.add_cascade(label = 'Room'+str(i+1), under = 4,menu=second_menu)
@@ -371,6 +379,7 @@ def main(width,height,num_bomb,UserData,isonline=False):
     NewGameButton=Button(status_frame,text="N",font=15,command=lambda:Newgame(root,width=width,height=height,num_bomb=num_bomb,UserData=UserData,isonline=isonlinevar,fromcommand=True))
     NewGameButton.pack(side=tk.LEFT,anchor='center',expand=1)
     root.bind("<Control-n>",partial(Newgame,root,width=width,height=height,num_bomb=num_bomb,UserData=UserData,isonline=isonlinevar,fromcommand=True))
+    root.bind("<Key-n>",partial(Newgame,root,width=width,height=height,num_bomb=num_bomb,UserData=UserData,isonline=isonlinevar,fromcommand=True))
     if isonlinevar.get():
         TimeLabel=Label(status_frame,text=0.0,font=15)
         TimeLabel.pack(side=tk.LEFT,anchor=tk.E,expand=1)
@@ -952,7 +961,6 @@ def main(width,height,num_bomb,UserData,isonline=False):
         return bomb_count
     def stop(event):
         pass
-    start = time.time()
     root.mainloop()
 def UserRead(event=None,root=None,UserInput=None):
     if root==None or UserInput==None:
@@ -976,7 +984,7 @@ def UserRead(event=None,root=None,UserInput=None):
 
 if __name__ == "__main__":
     basedirname=os.path.dirname(os.path.abspath("__file__"))
-    Usertk=tk.Tk()
+    Usertk=Tk()
     Usertk.title("User名を入力(ない場合は作成)")
     Userframe = ttk.Frame(Usertk, padding=10)
     Userframe.grid(row=3, column=0, sticky=E)
