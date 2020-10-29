@@ -84,7 +84,7 @@ def Newgame(root,event=None,width=None,height=None,num_bomb=None,UserData=None,i
     if fromcommand and isonline==True:
         return
     root.destroy()
-    main(width,height,num_bomb,UserData,isonline)
+    main(width=width,height=height,num_bomb=num_bomb,UserData=UserData,isonline=isonline)
 def WHBRead(event=None,root=None,master=None,WidthInput=None,HeightInput=None,BombInput=None,UserData=None):
     try:
         width=int(WidthInput.get())
@@ -110,7 +110,7 @@ def WHBRead(event=None,root=None,master=None,WidthInput=None,HeightInput=None,Bo
         return
     master.destroy()
     root.destroy()
-    main(width,height,num_bomb,UserData)
+    main(width=width,height=height,num_bomb=num_bomb,UserData=UserData)
 
 def Customgame(event=None,root=None,UserData=None,isonline=False,fromcommand=False):
     if not isinstance(isonline,bool):
@@ -194,7 +194,7 @@ def setRule(root,master,WidthInput,HeightInput,BombInput,UserData):
     d = pickle.loads(full_msg)
     print("3秒後に開始")
     time.sleep(3)
-    Newgame(root,width,height,num_bomb,UserData=UserData,isonline=True)
+    Newgame(root=root,width=width,height=height,num_bomb=num_bomb,UserData=UserData,isonline=True)
 
 def ConnectByHost(root,UserData,isonline,room_num):
     if isonline.get():
@@ -306,7 +306,7 @@ def ConnectByMember(root,UserData,isonline,room_num):
     d2 = pickle.loads(full_msg)
     print("3秒後に開始")
     time.sleep(3)
-    Newgame(root,d['width'],d['height'],d['num_bomb'],UserData=UserData,isonline=True)
+    Newgame(root=root,width=d['width'],height=d['height'],num_bomb=d['num_bomb'],UserData=UserData,isonline=True)
 
 def main(width,height,num_bomb,UserData,isonline=False):
     class ClassFrame(tk.Frame):
@@ -486,6 +486,7 @@ def main(width,height,num_bomb,UserData,isonline=False):
                 if not self.isonlineenemy:
                     if len(bomb_list) == 0:
                         while len(bomb_list) != num_bomb:
+                            #print(len(bomb_list))
                             bomb_num = random.randint(0,(width*height)-1)
                             if bomb_num != except_num and bomb_num != (except_num-(width+1)) and bomb_num != (except_num-width) and bomb_num != (except_num-(width-1)) and bomb_num != (except_num-1) and bomb_num != (except_num+1) and bomb_num != (except_num+(width+1)) and bomb_num != (except_num+width) and bomb_num != (except_num+(width-1)) and (bomb_num in bomb_list) == False:
                                 bomb_list.append(bomb_num)
@@ -972,7 +973,7 @@ def UserRead(event=None,root=None,UserInput=None):
         with open(basedirname+'/PickleData/UserInfomation_'+UserName+'.pickle', 'rb') as f:
             UserData=pickle.load(f)
         root.destroy()
-        main(9,9,10,UserData)
+        main(width=9,height=9,num_bomb=10,UserData=UserData)
     else:
         iscreate=messagebox.askyesno('ユーザー作成', '新しいユーザーを作成します。よろしいですか？')
         if iscreate:
@@ -980,7 +981,7 @@ def UserRead(event=None,root=None,UserInput=None):
             with open(basedirname+'/PickleData/UserInfomation_'+UserData['Name']+'.pickle','wb') as f:
                 pickle.dump(UserData,f)
             root.destroy()
-            main(9,9,10,UserData)
+            main(width=9,height=9,num_bomb=10,UserData=UserData)
 
 if __name__ == "__main__":
     basedirname=os.path.dirname(os.path.abspath("__file__"))
