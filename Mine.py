@@ -628,7 +628,7 @@ def main(width,height,num_bomb,UserData,isonline=False):
                             expscalebar['variable']=val
                             expscalebar['to']=RequiredExperiencePoint[UserData['Level']]
                             exp_label_100.configure(text=RequiredExperiencePoint[UserData['Level']])
-                            with open(basedirname+'/PickleData/UserInfomation_'+UserData['Name']+'.pickle','wb') as f:
+                            with open(basedirname+'/PickleData/Userinformation_'+UserData['Name']+'.pickle','wb') as f:
                                 pickle.dump(UserData,f)
 
         def right_click(self,event,remainbomb):
@@ -969,8 +969,8 @@ def UserRead(event=None,root=None,UserInput=None):
     UserName=UserInput.get()
     if not os.path.isdir(basedirname+'/PickleData'):
         os.mkdir(basedirname+'/PickleData')
-    if os.path.exists(basedirname+"/PickleData/UserInfomation_"+UserName+".pickle"):
-        with open(basedirname+'/PickleData/UserInfomation_'+UserName+'.pickle', 'rb') as f:
+    if os.path.exists(basedirname+"/PickleData/Userinformation_"+UserName+".pickle"):
+        with open(basedirname+'/PickleData/Userinformation_'+UserName+'.pickle', 'rb') as f:
             UserData=pickle.load(f)
         root.destroy()
         main(width=9,height=9,num_bomb=10,UserData=UserData)
@@ -978,7 +978,7 @@ def UserRead(event=None,root=None,UserInput=None):
         iscreate=messagebox.askyesno('ユーザー作成', '新しいユーザーを作成します。よろしいですか？')
         if iscreate:
             UserData=dict(Name=UserName,Level=1,Exp=0)#,'Totalexp'=0)
-            with open(basedirname+'/PickleData/UserInfomation_'+UserData['Name']+'.pickle','wb') as f:
+            with open(basedirname+'/PickleData/Userinformation_'+UserData['Name']+'.pickle','wb') as f:
                 pickle.dump(UserData,f)
             root.destroy()
             main(width=9,height=9,num_bomb=10,UserData=UserData)
